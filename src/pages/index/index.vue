@@ -1,8 +1,8 @@
 <!--  -->
 <template>
-<div class=''>
-    <div>欢迎来到小艾商城</div>
-</div>
+
+    <div class="text">欢迎来到小爱商城</div>
+
 </template>
 
 <script>
@@ -45,5 +45,10 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
-
+.text{
+    height: 100%;
+    background: url('../../../public/static/bg.png.jpeg') no-repeat;
+    background-size: 100% 110%;
+    color: red;
+}
 </style>

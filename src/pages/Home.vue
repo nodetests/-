@@ -33,17 +33,31 @@
         <!-- <index-header></index-header> -->天气
       </div>
       <div>
-         <div class="header">  
-          <div v-for="(item,index) in pathList" class="pathItem" :key="index" @contextmenu.prevent="menu(index)">
-            <div class="itemName" @click="goto(item)">{{item.name}}</div>
-            <div class="rightmenu" v-if="menuIndex===index">  
-              <ul>
-                <li @click="other(index)">关闭其他</li>
-                <!-- <li>关闭右侧</li> -->
-                <li @click="leftAll(index)">关闭左侧</li>
-                <li @click="nowItem(index)">关闭当前</li>
-              </ul>
-            </div>
+         <div class="header"> 
+           <div class="dragDemo">
+            <!-- 拽动组件 -->
+            <draggable class="list-group"
+                    element="div"
+                    v-model="pathList"
+                    :options="dragOptions1"
+                    :move="onMove"
+                    @start="rightStart"
+                    @end="rightEnd">
+              <div v-for="(item,index) in pathList" class="pathItem" :key="index" @contextmenu.prevent="menu(index)">
+                    <div class="itemName" @click="goto(item,index)" >
+                    <span :class="[colorContent===item.name ?'colors':'']">{{item.name}}</span>
+                  </div>
+            
+                <div class="rightmenu" v-if="menuIndex===index">  
+                  <ul>
+                    <li @click="other(index)">关闭其他</li>
+                    <!-- <li>关闭右侧</li> -->
+                    <li @click="leftAll(index)">关闭左侧</li>
+                    <li @click="nowItem(index)">关闭当前</li>
+                  </ul>
+                </div>
+              </div>
+            </draggable>
           </div>
         </div>
       </div>
@@ -61,6 +75,7 @@
 </template>
 
 <script>
+import draggable from "vuedraggable";
 import navbar from '../components/navbar'
 // 引入vuex
 import { createNamespacedHelpers } from 'vuex'
@@ -73,22 +88,26 @@ export default {
   props: {
   },
   components: {
-  navbar
+  navbar,draggable
   },
   data() {
     return { 
-      msg: '我是home组件的数据',
-      // main上方的导航数据
+      isDragging:false,
+      oldleftlist:[],
       pathList:[{name:'首页',path:'/'}],
+      // main上方的导航数据
       menuIndex:-1,
       defaultOpens:[],
       paths:'',
+      colorContent:'首页'
     }
   },
   methods: {
     ...userActions(['getMenus']) ,
     //  上方导航栏
     childItem(item,item1){
+      // console.log(item1)
+      this.colorContent=item1.authName
       let objs ={
         name:item1.authName,
         path:item1.path
@@ -108,16 +127,35 @@ export default {
           // console.log(item)
     },
     // 点击导航 右边也跳转
-    goto(item){
-      console.log(this.$route.path)
+    goto(item,index){
+      // console.log(this.$route.path)
      this.$router.push({path:item.path})
-    //  console.log(this.$route.path)
+     console.log(item)
+     this.colorContent=item.name
+    
     },
-    // 右键菜单------开始
-
+    // 右键菜单------开始 
     // 监听自定义菜单显示
+    // 拖拽效果
+    onMove({relatedContext, draggedContext}) {
+        const relatedElement = relatedContext.element;
+        const draggedElement = draggedContext.element;
+        return (
+            (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+        );
+
+    },
+    rightStart(){
+     this.oldleftlist=this.pathList.concat();
+      this.isDragging=true;
+    },
+    rightEnd(){
+      this.isDragging=false;
+      // 左边不变
+      // this.pathList=this.oldleftlist
+    },
     cancelRightmenu(){
-      this.menuIndex= -1
+      this.menuIndex= -1  
     },
     menu(index){
       this.menuIndex=index
@@ -169,14 +207,15 @@ export default {
        this.pathList=arr1
         // console.log(this.pathList[indexs-1].path)
        this.$router.push({path:this.pathList[indexs-1].path})
-      }
-       
-    },
+       }
+      }, 
+    
     // 右键菜单------结束
 
     // send() {
     //   this.$bus.$emit('send', this.msg)
-    // }
+     // }
+  
   },
   mounted() {
      this.getMenus()
@@ -193,6 +232,16 @@ export default {
   },
   computed: {
     ...userState(['menus']),
+      dragOptions1() {
+          return {
+              animation: 0,
+              group: {
+                  name: "description",
+                  pull:'clone'
+              },
+              ghostClass: "ghost",
+          };
+      },
      onRoutes() {
             //  返回当前路由
             if(JSON.stringify(this.menus).indexOf(this.$route.path)=== -1){
@@ -223,6 +272,9 @@ export default {
 }
 
 .header{
+height: 200px;
+}
+.list-group{
 display: flex;
 justify-content: flex-start;
 margin-top: 50px;
@@ -231,7 +283,7 @@ margin-top: 50px;
   width: 100px;
   text-align: center;
   margin-left: 30px;
-   position: relative;
+  position: relative;
 }
 .itemName{
   color: #1a1a1a;
@@ -239,8 +291,8 @@ margin-top: 50px;
   }
   .rightmenu{
     position: absolute;
-    top:-90px;
-    left: -20px;
+    top: 10px;
+    left: -30px;
     z-index: 999999;
     opacity: 0.8;
     // background: red;
@@ -260,5 +312,8 @@ margin-top: 50px;
     li:nth-child(-n+3){
       border-bottom: none;
     }
+}
+.colors{
+  color: #6BC7FF;
 }
 </style>
