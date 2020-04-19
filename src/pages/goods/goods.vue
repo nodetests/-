@@ -112,7 +112,7 @@
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 import {createNamespacedHelpers} from 'vuex'
 const goodsMoudle =createNamespacedHelpers('goods')
 const {mapState: goodsState, mapMutations: goodsMutations, mapActions: goodsActions}=goodsMoudle

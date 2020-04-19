@@ -1,13 +1,18 @@
 <!--  -->
 <template>
-
-    <div class="text">欢迎来到小爱商城</div>
+    
+    <div class="text">
+        <div v-if="username">{{username}}</div>
+        <div>欢迎来到小爱商城</div>
+        </div>
 
 </template>
 
 <script>
-//这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
-//例如：import 《组件名称》 from '《组件路径》';
+import { createNamespacedHelpers } from 'vuex'
+// 传模块的名字
+const userModule = createNamespacedHelpers('user')
+const { mapState: userState, mapMutations: userMutations, mapActions: userActions } = userModule
 
 export default {
 //import引入的组件需要注入到对象中才能使用
@@ -15,7 +20,7 @@ components: {},
 data() {
 //这里存放数据
 return {
-
+username:''
 };
 },
 //监听属性 类似于data概念
@@ -30,9 +35,13 @@ methods: {
 created() {
 
 },
+computed:{
+//    ...userState('username') 
+},
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+ this.username=this.$store.state.username
+ console.log( this.username)
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前

@@ -10,7 +10,8 @@ export default{
         pathList:[],
         userList:[],
         userfrom:{},
-        nowuser:{}
+        nowuser:{},
+        // username:''
     },
     mutations: {
         setMenu(state,data){
@@ -24,7 +25,10 @@ export default{
         },
         setNowuser(state,data){
             state.nowuser=data
-        }
+        },
+        // setUsername(state,data){
+        //     state.username=data
+        // }
     },
     actions: {
         // 用户登录
@@ -36,6 +40,8 @@ export default{
                     //  存用户 token
                     localStorage.setItem('adminUser',JSON.stringify(res.data))
                     localStorage.setItem('adminToken',res.data.token)
+                    // localStorage.setItem('username',res.data.username)
+                    // commit('setUsername',res.data.username)
                     router.push('./')
                     Message.success('登录成功')
                 }  

@@ -9,7 +9,10 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './bus'
 import ZkTable from 'vue-table-with-tree-grid'
-
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 Vue.use(ZkTable)
 Vue.use(ElementUI)
 Vue.prototype.$dayjs = dayjs

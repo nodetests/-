@@ -29,14 +29,16 @@ export default {
   data() {
     return {
     form:{
-          username:'admin',
-          password:'123456'
+          username:'',
+          password:''
         }
     }
   },
   methods: {
        ...userActions(['login']) ,
     submit(){
+      localStorage.setItem('username',this.form.username)
+      this.$store.state.username=this.form.username
       this.login({
         username:this.form.username,
         password:this.form.password
@@ -51,7 +53,7 @@ export default {
 
   },
   computed: {
-
+...userState(['username'])
   }
 }
 </script>

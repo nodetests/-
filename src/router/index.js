@@ -82,57 +82,6 @@ const routes = [
       },
   ]
 },
-
-  // {
-  //   path: '/',
-  //   name: 'home',
-  //   component: Home,
-  //     children:[
-  //     {
-  //       path: '/users/users',
-  //       name: 'users',
-  //       component: () => import ('../pages/users/users')   
-  //     },
-  //     {
-  //       path: '/rights/rights',
-  //       name: 'rights',
-  //       component: () => import ('../pages/rights/rights')   
-  //     },
-  //     {
-  //       path: '/rights/roles',
-  //       name: 'roles',
-  //       component: () => import ('../pages/rights/roles')   
-  //     },
-  //     {
-  //       path: '/goods/goods',
-  //       name: 'goods',
-  //       component: () => import ('../pages/goods/goods')   
-  //     },
-  //     {
-  //       path: '/goods/params',
-  //       name: 'params',
-  //       component: () => import ('../pages/goods/params')   
-  //     },
-  //     {
-  //       path: '/goods/categories',
-  //       name: 'categories',
-  //       component: () => import ('../pages/goods/categories')   
-  //     },
-  //     {
-  //       path: '/orders/orders',
-  //       name: 'orders',
-  //       component: () => import ('../pages/orders/orders')   
-  //     },
-  //     {
-  //       path: '/reports/reports',
-  //       name: 'reports',
-  //       component: () => import ('../pages/reports/reports')   
-  //     },
-  //     ]
-  // },
-
- 
-
 ]
 
 const isPro = process.env.NODE_ENV === 'production'
@@ -143,5 +92,14 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title
+  let user = localStorage.getItem('username')
+  if (to.path === '/Login' || to.path === '/Register') {
+      next()
+  } else {
+      user ? next() : next('/Login')
+  }
+  next()
+})
 export default router

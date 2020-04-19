@@ -71,6 +71,19 @@ export default{
                 console.log(err);
             }
         },
+        // 添加商品
+        async addGoods({commit},params){
+            try {
+                let res = await api.addGoods(params)
+                console.log(res);
+                if (res.meta.status === 201) {
+                    Message.success(res.meta.msg)
+                    router.push('/goods')
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
         // 删除商品
         async deleteGoods({ commit }, id) {
             try {
